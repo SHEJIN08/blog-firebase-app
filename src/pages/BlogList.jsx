@@ -9,8 +9,10 @@ import { toast } from "react-toastify";
 
 export function BlogList() {
   const [blogs, setBlogs] = useState([]);
-
   const { user } = useContext(AuthContext);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 3;
 
   const fetchBlogs = async () => {
     const snapshot = await getDocs(collection(db, "blogs"));
@@ -34,6 +36,11 @@ export function BlogList() {
     toast.success("successfully logged out");
   };
 
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
+  const totalPages = Math.ceil(blogs.length / blogsPerPage);
+
   return (
     <div>
       <div className="header-bar">
@@ -55,7 +62,7 @@ export function BlogList() {
         </div>
       </div>
 
-      {blogs.map((blog) => (
+      {currentBlogs.map((blog) => (
         <div key={blog.id} className="blog-card blog-card-layout">
           {blog.imageUrl && (
             <div className="blog-image-container">
@@ -88,6 +95,31 @@ export function BlogList() {
           </div>
         </div>
       ))}
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+          >
+            Previous
+          </button>
+
+          <span className="pagination-info">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

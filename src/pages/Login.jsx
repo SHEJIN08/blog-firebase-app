@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { auth, googleProvider } from "../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigate();
+
+  const {user} = useContext(AuthContext);
+
+  useEffect(() => {
+    if(user){
+      navigation('/', {replace: true})
+    }
+  }, [user, navigation]);
 
   const handleAuthError = (error) => {
     switch (error.code) {
@@ -33,7 +42,7 @@ export function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Welcome back!");
-      navigation("/");
+      navigation("/", {replace: true});
     } catch (err) {
       handleAuthError(err);
     }
@@ -43,11 +52,15 @@ export function Login() {
     try {
       await signInWithPopup(auth, googleProvider);
       toast.success("Logged in with Google!");
-      navigation("/");
+      navigation("/", {replace: true});
     } catch (err) {
       handleAuthError(err);
     }
   };
+
+  if(user){
+    return null;
+  }
 
   return (
     <form onSubmit={handleLogin} noValidate>

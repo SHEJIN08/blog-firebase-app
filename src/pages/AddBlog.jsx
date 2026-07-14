@@ -9,12 +9,33 @@ export function AddBlog() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+
+  const validateForm = () => {
+    let formErrors = {};
+    if (!title.trim()) formErrors.title = "Title is required";
+    if (!content.trim()) formErrors.content = "Content cannot be empty";
+
+    if (imageUrl && !imageUrl.match(/^https?:\/\/.+/)) {
+      formErrors.imageUrl =
+        "Please enter a valid URL starting with http:// or https://";
+    }
+
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.warning("Please correct the errors before saving.");
+      return;
+    }
+
     await addDoc(collection(db, "blogs"), {
       title,
       content,
@@ -26,7 +47,7 @@ export function AddBlog() {
     navigate("/");
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <h2>Add Blog</h2>
       <input
         value={title}
@@ -34,6 +55,7 @@ export function AddBlog() {
         placeholder="Title"
         required
       />
+      {errors.title && <span className="error-text">{errors.title}</span>}
       <br />
       <br />
       <textarea
@@ -42,6 +64,7 @@ export function AddBlog() {
         placeholder="Content"
         required
       />
+      {errors.content && <span className="error-text">{errors.content}</span>}
       <br />
       <br />
       <input
@@ -49,6 +72,7 @@ export function AddBlog() {
         onChange={(e) => setImageUrl(e.target.value)}
         placeholder="Image URL (Optional)"
       />
+      {errors.imageUrl && <span className="error-text">{errors.imageUrl}</span>}
       <button type="submit">Save Blog</button>
     </form>
   );
