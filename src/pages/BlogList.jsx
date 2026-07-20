@@ -32,7 +32,7 @@ export function BlogList() {
   }, []);
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await signOut(auth);  
     toast.success("successfully logged out");
   };
 
@@ -49,7 +49,7 @@ export function BlogList() {
           <Link to="/add">
             <button>Add New Blog</button>
           </Link>
-
+          
           {user && user.uid ? (
             <button onClick={handleLogout} className="danger">
               Logout

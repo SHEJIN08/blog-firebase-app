@@ -246,6 +246,48 @@ textarea:focus {
   cursor: not-allowed;
   transform: none; /* Disables jump transitions on click constraints */
 }
+/* --- 404 Not Found Page Styles --- */
+
+.notfound-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 70vh;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  margin-top: 40px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.notfound-code {
+  font-size: 6rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0;
+  line-height: 1;
+}
+
+.notfound-container h2 {
+  font-size: 1.8rem;
+  color: var(--text-color);
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.notfound-container p {
+  color: #aebf73; /* Muted lime text */
+  font-size: 1rem;
+  margin-bottom: 25px;
+  max-width: 400px;
+}
+
+.notfound-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+}
 
 /* Mobile Responsiveness */
 @media (max-width: 600px) {

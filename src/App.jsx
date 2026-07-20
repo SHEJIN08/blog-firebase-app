@@ -7,6 +7,7 @@ import { AddBlog } from './pages/AddBlog';
 import { EditBlog } from './pages/EditBlog';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NotFound from './pages/NotFound';
 
 const PrivateRouter = ({children}) => {
   const {user} = useContext(AuthContext);
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: '/edit/:id',
     element: <PrivateRouter> <EditBlog/> </ PrivateRouter>
+  },
+  {
+    path: '*',
+    element: <NotFound />
   }
 ]);
 
